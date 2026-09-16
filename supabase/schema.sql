@@ -1,0 +1,10 @@
+create extension if not exists pgcrypto;
+create table if not exists businesses(id uuid primary key default gen_random_uuid(),name text not null,slug text unique not null,logo_url text,primary_color text not null default '#ffd44d',google_review_url text not null,created_at timestamptz not null default now());
+create table if not exists events(id bigint generated always as identity primary key,business_id uuid not null references businesses(id) on delete cascade,event_type text not null check(event_type in ('tap','feedback','google_click')),created_at timestamptz not null default now());
+create table if not exists feedback(id bigint generated always as identity primary key,business_id uuid not null references businesses(id) on delete cascade,rating int not null check(rating between 1 and 5),message text,created_at timestamptz not null default now());
+create index if not exists events_business_created_idx on events(business_id,created_at desc);
+create index if not exists feedback_business_created_idx on feedback(business_id,created_at desc);
+insert into businesses(name,slug,primary_color,google_review_url) values('Carrozzeria Oliviero','oliviero','#ffd44d','https://g.page/r/REPLACE_WITH_REAL_REVIEW_LINK/review') on conflict(slug) do nothing;
+alter table businesses enable row level security;
+alter table events enable row level security;
+alter table feedback enable row level security;

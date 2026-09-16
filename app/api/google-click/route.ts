@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {adminClient} from "@/lib/admin";
+export async function POST(req:Request){try{const{business_id}=await req.json();if(!business_id)return NextResponse.json({error:"business_id required"},{status:400});await adminClient().from("events").insert({business_id,event_type:"google_click"});return NextResponse.json({ok:true})}catch{return NextResponse.json({error:"server error"},{status:500})}}
