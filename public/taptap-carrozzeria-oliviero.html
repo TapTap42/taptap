@@ -319,7 +319,7 @@
   const ENTRY_COMMENT = 'entry.558752721';
 
   function logToSheet(rating, comment) {
-    const data = new FormData();
+    const data = new URLSearchParams();
     data.append(ENTRY_RATING, String(rating));
     data.append(ENTRY_COMMENT, comment || '');
     fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: data }).catch(() => {});
