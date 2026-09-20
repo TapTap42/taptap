@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TapTap — Carrozzeria Oliviero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --petrol-deep: #0c3335;
+    --petrol: #124548;
+    --petrol-light: #1b5b5e;
+    --yellow: #f5c518;
+    --yellow-dim: #f5c51833;
+    --cream: #f6f4ee;
+    --cream-dim: #f6f4ee99;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    background: radial-gradient(circle at 50% -10%, var(--petrol) 0%, var(--petrol-deep) 65%);
+    color: var(--cream);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .screen { width: 100%; max-width: 400px; }
+
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 18px;
+    opacity: 0.85;
+  }
+
+  .mark svg { width: 20px; height: 20px; }
+
+  .mark span {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--yellow);
+  }
+
+  /* --- hero illustration --- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: linear-gradient(180deg, var(--petrol) 0%, var(--petrol-deep) 100%);
+    padding: 22px 10px 14px;
+    margin-bottom: 22px;
+  }
+
+  .hero svg.car { width: 100%; height: auto; display: block; position: relative; z-index: 1; }
+
+  .shine {
+    position: absolute;
+    top: -20%;
+    left: 0;
+    width: 40%;
+    height: 140%;
+    background: linear-gradient(100deg, transparent, rgba(246,244,238,0.35), transparent);
+    transform: translateX(-160%) skewX(-20deg);
+    animation: shine-sweep 1.8s 0.3s ease forwards;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  @keyframes shine-sweep {
+    to { transform: translateX(340%) skewX(-20deg); }
+  }
+
+  .business {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .location {
+    text-align: center;
+    font-size: 13px;
+    color: var(--cream-dim);
+    margin-bottom: 30px;
+  }
+
+  .question {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .stars-wrap { position: relative; margin-bottom: 8px; }
+
+  .stars { display: flex; justify-content: center; gap: 6px; }
+
+  .star-btn {
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .star-btn svg { width: 42px; height: 42px; transition: transform 0.15s ease; }
+  .star-btn:active svg { transform: scale(0.9); }
+
+  .star-btn svg path {
+    stroke: var(--yellow);
+    stroke-width: 1.5;
+    fill: transparent;
+    transition: fill 0.2s ease;
+  }
+
+  .star-btn.filled svg path { fill: var(--yellow); }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.4) rotate(-6deg); }
+    100% { transform: scale(1); }
+  }
+
+  .star-btn.pop svg { animation: pop 0.4s ease; }
+
+  .particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    background: var(--yellow);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    pointer-events: none;
+    animation: burst 0.75s ease-out forwards;
+  }
+
+  @keyframes burst {
+    to { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0); opacity: 0; }
+  }
+
+  .response {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--petrol-light);
+    display: none;
+  }
+
+  .response.visible { display: block; animation: rise 0.35s ease; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .response p {
+    font-size: 14px;
+    color: var(--cream-dim);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--yellow);
+    color: var(--petrol-deep);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .cta:hover { box-shadow: 0 6px 18px var(--yellow-dim); transform: translateY(-1px); }
+  .cta:active { transform: translateY(0); }
+
+  textarea {
+    width: 100%;
+    background: var(--petrol);
+    border: 1px solid var(--petrol-light);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 3px;
+    resize: none;
+    height: 90px;
+    margin-bottom: 12px;
+  }
+
+  textarea::placeholder { color: var(--cream-dim); }
+  textarea:focus, .star-btn:focus-visible, .cta:focus-visible {
+    outline: 2px solid var(--yellow);
+    outline-offset: 2px;
+  }
+
+  .sent {
+    text-align: center;
+    font-size: 14px;
+    color: var(--yellow);
+    display: none;
+  }
+  .sent.visible { display: block; animation: rise 0.3s ease; }
+
+  .note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--cream-dim);
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 12a8 8 0 0 1 16 0" stroke="#f5c518" stroke-width="2" stroke-linecap="round"/>
+      <path d="M7 12a5 5 0 0 1 10 0" stroke="#f5c518" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="12" cy="12" r="2" fill="#f5c518"/>
+    </svg>
+    <span>TAPTAP</span>
+  </div>
+
+  <div class="hero">
+    <div class="shine"></div>
+    <svg class="car" viewBox="0 0 240 108" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="120" cy="94" rx="100" ry="6" fill="#000" opacity="0.25"/>
+      <path d="M18 78 Q16 56 42 52 L66 30 Q82 18 108 18 L158 18 Q180 18 197 34 L219 52 Q228 56 228 68 L228 78 Z"
+            fill="#1b5b5e" stroke="#f5c518" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M78 49 L98 29 Q107 22 120 22 L154 22 Q166 22 176 33 L190 49 Z" fill="#0c3335"/>
+      <line x1="132" y1="24" x2="126" y2="49" stroke="#1b5b5e" stroke-width="2"/>
+      <circle cx="63" cy="80" r="16" fill="#0c3335" stroke="#f5c518" stroke-width="3.5"/>
+      <circle cx="63" cy="80" r="4" fill="#f5c518"/>
+      <circle cx="183" cy="80" r="16" fill="#0c3335" stroke="#f5c518" stroke-width="3.5"/>
+      <circle cx="183" cy="80" r="4" fill="#f5c518"/>
+      <rect x="24" y="60" width="14" height="5" rx="2" fill="#f5c518"/>
+      <rect x="205" y="60" width="12" height="5" rx="2" fill="#f5c518" opacity="0.85"/>
+    </svg>
+  </div>
+
+  <div class="business">Carrozzeria Oliviero</div>
+  <div class="location">Chiaravalle (AN)</div>
+
+  <div class="question">Com'è andata la riparazione?</div>
+
+  <div class="stars-wrap">
+    <div class="stars" id="stars">
+      <button class="star-btn" data-value="1" aria-label="1 stella">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-value="2" aria-label="2 stelle">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-value="3" aria-label="3 stelle">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-value="4" aria-label="4 stelle">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6L12 2z"/></svg>
+      </button>
+      <button class="star-btn" data-value="5" aria-label="5 stelle">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8L6 21l1.6-7L2.2 9.2l7.1-.6L12 2z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- risposta per 4-5 stelle -->
+  <div class="response" id="response-good">
+    <p>Fantastico! Una recensione ci aiuta a far sapere ad altri quanto teniamo al nostro lavoro.</p>
+    <a class="cta" id="google-link" href="https://search.google.com/local/writereview?placeid=ChIJkUnt_l-dLRMRRm5BA43IFh0" target="_blank" rel="noopener">Lascia una recensione su Google</a>
+  </div>
+
+  <!-- risposta per 1-3 stelle -->
+  <div class="response" id="response-bad">
+    <p>Ci dispiace. Raccontaci cosa non ha funzionato — lo leggiamo direttamente noi, non finisce online.</p>
+    <textarea id="feedback-text" placeholder="Cosa possiamo migliorare?"></textarea>
+    <button class="cta" id="send-feedback">Invia all'officina</button>
+    <div class="sent" id="sent-msg">Aperto WhatsApp con il messaggio pronto ✓</div>
+  </div>
+
+  <div class="note">Powered by TapTap — NFC reviews &amp; solutions</div>
+
+</div>
+
+<script>
+  const stars = document.querySelectorAll('.star-btn');
+  const starsWrap = document.getElementById('stars-wrap') || document.querySelector('.stars-wrap');
+  const responseGood = document.getElementById('response-good');
+  const responseBad = document.getElementById('response-bad');
+  const sendBtn = document.getElementById('send-feedback');
+  const feedbackText = document.getElementById('feedback-text');
+  const sentMsg = document.getElementById('sent-msg');
+
+  const WHATSAPP_NUMBER = '393392221507'; // Carrozzeria Oliviero — numero reale
+
+  // --- tracciamento su Google Sheet (silenzioso, non blocca mai l'utente) ---
+  const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSefRkhoWNBiJ4awSIpRe9FUa-Hvo3V6egyl6JhajINSPIAroA/formResponse';
+  const ENTRY_RATING = 'entry.1169414626';
+  const ENTRY_COMMENT = 'entry.558752721';
+
+  function logToSheet(rating, comment) {
+    const data = new FormData();
+    data.append(ENTRY_RATING, String(rating));
+    data.append(ENTRY_COMMENT, comment || '');
+    fetch(FORM_ACTION, { method: 'POST', mode: 'no-cors', body: data }).catch(() => {});
+  }
+
+  let selectedRating = 0;
+
+  function paintStars(uptoValue) {
+    stars.forEach(s => {
+      s.classList.toggle('filled', parseInt(s.dataset.value, 10) <= uptoValue);
+    });
+  }
+
+  function burstConfetti() {
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const angle = Math.random() * Math.PI - Math.PI; // upward-ish spread
+      const distance = 40 + Math.random() * 55;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance - 20;
+      p.style.setProperty('--tx', tx + 'px');
+      p.style.setProperty('--ty', ty + 'px');
+      p.style.setProperty('--tr', (Math.random() * 360) + 'deg');
+      p.style.left = (50 + (Math.random() * 30 - 15)) + '%';
+      starsWrap.appendChild(p);
+      setTimeout(() => p.remove(), 800);
+    }
+  }
+
+  stars.forEach(btn => {
+    // hover preview (desktop) — non tocca la selezione reale
+    btn.addEventListener('mouseenter', () => {
+      paintStars(parseInt(btn.dataset.value, 10));
+    });
+    btn.addEventListener('mouseleave', () => {
+      paintStars(selectedRating);
+    });
+
+    btn.addEventListener('click', () => {
+      const value = parseInt(btn.dataset.value, 10);
+      selectedRating = value;
+      paintStars(value);
+      logToSheet(value, ''); // registra il tap subito, appena vota — anche se poi chiude la pagina
+
+      btn.classList.add('pop');
+      setTimeout(() => btn.classList.remove('pop'), 400);
+
+      if (value >= 4) {
+        responseGood.classList.add('visible');
+        responseBad.classList.remove('visible');
+        burstConfetti();
+      } else {
+        responseBad.classList.add('visible');
+        responseGood.classList.remove('visible');
+        sentMsg.classList.remove('visible');
+      }
+    });
+  });
+
+  sendBtn.addEventListener('click', () => {
+    const text = feedbackText.value.trim() || '(nessun dettaglio aggiunto)';
+    const message = `Valutazione TapTap: ${selectedRating}/5\nCommento: ${text}`;
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+    sentMsg.classList.add('visible');
+  });
+</script>
+
+</body>
+</html>
